@@ -1,0 +1,4 @@
+tkinter
+spotipy
+yt-dlp
+python-vlc
