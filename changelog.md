@@ -17,7 +17,7 @@
 - Migliorato il flusso di interazione con l'utente, con messaggi di errore e successo.
 - Ottimizzazione del processo di download dei brani tramite YouTube.
 
-## [0.1.0] - 2024-12-18
+## Beta [0.1.0] - 2024-12-18
 ### Initial Release
 - Versione iniziale dell'app con supporto per la ricerca di brani musicali da Spotify.
 - Supporto per il download e la riproduzione di brani da YouTube tramite `yt-dlp`.
