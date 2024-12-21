@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [In Development]
 ### Added
 - Aggiunta la funzionalità di ricerca delle canzoni tramite Spotify.
 - Implementata l'integrazione per il download di canzoni da YouTube tramite `yt-dlp`.
