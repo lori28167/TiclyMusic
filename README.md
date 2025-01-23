@@ -1,6 +1,5 @@
-# PyMusic
-Spotify but open source and in python
-
+# TiclyMusic
+TiclyMusic wants to make a free way to download and listen music and wants to be totally open source so all the community can edit it.
 
 # How to install
 
