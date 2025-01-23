@@ -27,3 +27,10 @@
 - Aggiunta la funzionalità di download e ascolto delle canzoni trovate, con VLC per la riproduzione.
 - Implementate opzioni per mettere in pausa, riprendere e ripetere la riproduzione musicale.
 - Aggiunta la gestione del volume tramite un cursore.
+
+## Beta [0.2.0] - 2025-1-23
+### Second Release
+- Modifiche al nome e alle risorse dell'app
+- Le canzoni vengono automaticamente scaricate nel folder ./downloads
+## Beta [0.3.0] - ?
+- Accettiamo richieste di aggiunte negli issues.
