@@ -5,4 +5,4 @@ TiclyMusic wants to make a free way to download and listen music and wants to be
 
 To "install" the app you need <a href="https://python.org">python</a>
 Then do "pip install -r requirements.txt"
-Then do python3 prova.py
+Then do python3 main.py
