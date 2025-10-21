@@ -1,0 +1,23 @@
+jobs:
+  my_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Graphical Dependencies
+        run: |
+          sudo apt-get update
+          # Install GNOME components (if needed by your app) and Xvfb
+          sudo apt-get install -y xvfb gnome-shell gnome-terminal vlc # Add any specific dependencies
+          
+      - name: Start Virtual Display Server (Xvfb)
+        run: |
+          # Start Xvfb on display :99
+          Xvfb :99 -ac -screen 0 1280x1024x24 &
+          export DISPLAY=:99
+      
+      - name: Run Graphical App/Test
+        run: |
+          pip install -r requirements.txt
+          python3 main.py
+          # Your command to run a graphical application or UI test
+          # Example: gnome-terminal & # (Not useful but proves it can launch)
+          # Example: YourApp --test-ui
