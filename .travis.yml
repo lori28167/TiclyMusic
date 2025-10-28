@@ -1,18 +1,94 @@
+# 1. Define the base environment
 language: python
+python: "3.10" # Use a single version for the multi-OS matrix
 
-python:
-  - "3.9"
-  - "3.10"
-  - "3.11"
+# 2. System Dependencies for Linux (Debian build)
+addons:
+  apt:
+    packages:
+      - tk-dev # For Tkinter
 
+# 3. Cache dependencies
 cache: pip
 
-install:
-  - pip install -r requirements.txt
+# 4. Define Build Stages
+# The 'test' stage is for unit tests; 'build' stage is for creating artifacts.
+stages:
+  - name: test
+  - name: build
+    if: branch = main AND type != pull_request # Only build/deploy artifacts from main branch commits
 
-script:
-  # Assuming you are using a test runner like pytest or a similar tool.
-  # Replace 'pytest' with your actual test command (e.g., 'python setup.py test', 'nosetests', or 'make test').
-  - export DISPLAY=':99.0'
-  - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-  - python3 main.py
+# 5. Define the Jobs (Build Matrix)
+jobs:
+  include:
+    # --- STAGE 1: Linux Test Job ---
+    - stage: test
+      name: "Linux Unit Tests"
+      os: linux
+      env: TEST_CMD=pytest
+      
+      install:
+        - pip install -r requirements.txt
+        - pip install pytest # ensure pytest is installed if not in requirements.txt
+
+      script:
+        # Virtual display setup for any Tkinter tests
+        - "export DISPLAY=':99.0'"
+        - "Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &"
+        - $TEST_CMD
+
+    # --- STAGE 2: Windows Build Job (for .exe) ---
+    - stage: build
+      name: "Windows .exe Build"
+      os: windows
+      language: shell # Use shell language on Windows to control environment better
+      
+      # Use an older, more stable Windows image for PyInstaller compatibility
+      # 'windows-2019' is a good default.
+      
+      before_install:
+        # Install Python and PyInstaller on Windows
+        - choco install python --version 3.10.11 --force --params "/InstallDir:C:\Python310"
+        - export PATH="/c/Python310:/c/Python310/Scripts:$PATH"
+        - python -m pip install --upgrade pip
+        - pip install pyinstaller
+        - pip install -r requirements.txt
+      
+      script:
+        # Assumes your main script is named 'main.py'
+        - pyinstaller --onefile --windowed main.py --name TiclyMusic
+        # The .exe will be in dist/
+
+    # --- STAGE 3: Linux Build Job (for .deb) ---
+    - stage: build
+      name: "Linux .deb Package Build"
+      os: linux
+      env: MAIN_SCRIPT=main.py APP_NAME=TiclyMusic
+      
+      before_install:
+        # Install dependencies and the packaging tool (fpm is easy)
+        - sudo apt-get update
+        - sudo apt-get install -y ruby ruby-dev build-essential
+        - gem install fpm
+        - pip install -r requirements.txt
+        - pip install pyinstaller # We use PyInstaller first to get a clean install directory
+      
+      script:
+        # 1. Create a self-contained folder using PyInstaller
+        - pyinstaller --distpath package_root --onedir $MAIN_SCRIPT --name $APP_NAME
+        
+        # 2. Use fpm to package the contents of the PyInstaller folder into a .deb
+        # This packages the entire application folder to be installed into /opt/
+        - fpm -s dir -t deb -n $APP_NAME -v 1.0.0 --description "TiclyMusic Application" --url "https://github.com/lori28167/TiclyMusic" --prefix /opt/$APP_NAME package_root/$APP_NAME/
+
+      # 6. Deploy the generated files
+    deploy:
+      provider: releases
+      api_key: "$GITHUB_TOKEN" 
+      file_glob: true
+      file: 
+        - "dist/TiclyMusic.exe"
+        - "*.deb"
+      skip_cleanup: true
+      on:
+        tags: true # Only deploy when a new Git tag is pushed (e.g., v1.0.0)
