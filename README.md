@@ -1,5 +1,6 @@
 # TiclyMusic
-[](https://app.travis-ci.com/github/lori28167/TiclyMusic/logscans)
+[![Build Status](https://app.travis-ci.com/lori28167/TiclyMusic.svg?token=enSC1epopegpU9TLFMmE&branch=main)](https://app.travis-ci.com/lori28167/TiclyMusic)
+
 TiclyMusic wants to make a free way to download and listen music and wants to be totally open source so all the community can edit it.
 
 # How to install
