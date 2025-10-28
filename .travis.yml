@@ -1,0 +1,16 @@
+language: python
+
+python:
+  - "3.9"
+  - "3.10"
+  - "3.11"
+
+cache: pip
+
+install:
+  - pip install -r requirements.txt
+
+script:
+  # Assuming you are using a test runner like pytest or a similar tool.
+  # Replace 'pytest' with your actual test command (e.g., 'python setup.py test', 'nosetests', or 'make test').
+  - python3 main.py
