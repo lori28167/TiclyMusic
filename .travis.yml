@@ -14,3 +14,5 @@ script:
   # Assuming you are using a test runner like pytest or a similar tool.
   # Replace 'pytest' with your actual test command (e.g., 'python setup.py test', 'nosetests', or 'make test').
   - python3 main.py
+  - "export DISPLAY=':99.0'"
+  - "Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &"
